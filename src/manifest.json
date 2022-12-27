@@ -1,0 +1,32 @@
+{
+    "default_locale": "en",
+    "name": "Vortmaro text reading assistant",
+    "description": "A tool to lookup words and add them to a list of words to memorise",
+    "version": "0.0.1",
+    "permissions": [
+        "activeTab",
+        "contextMenus",
+        "*://vortmaro.org/*"
+    ],
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "content_scripts": [
+        {
+            "exclude_matches": ["*://developer.mozilla.org/*"],
+            "matches": ["*://*/*"],
+            "js": [
+                "components/declensionCruncher.js",
+                "components/audio.js",
+                "components/file.js",
+                "components/dictionaries.js",
+                "view-page.js"
+            ],
+            "css": [
+                "word-definition.css",
+                "page-modifications.css"
+            ]
+        }
+    ],
+    "manifest_version": 2
+}

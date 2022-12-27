@@ -1,0 +1,42 @@
+#vortmaro-reader-word-definition {
+    z-index: 65535;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    border-radius: 5px;
+    border: 2.5px solid grey;
+    padding: 0.4em;
+    background-color: #FFF;
+    color: #000;
+    display: none;
+}
+
+#vortmaro-reader-word-definition p {
+    font-size: 12pt;
+    margin-top: 0.3em;
+    margin-bottom: 0;
+}
+
+#vortmaro-reader-word-definition p:first-child {
+    margin-top: 0;
+}
+
+#vortmaro-reader-word-definition ol {
+    margin-top: 0.4em;
+    margin-bottom: 0;
+    padding-left: 1.5em;
+}
+
+#vortmaro-reader-word-definition ul {
+    padding-left: 1.5em;
+}
+
+#vortmaro-reader-word-definition img {
+    max-height: 150px;
+}
+
+#vortmaro-reader-word-definition .popover-close {
+    cursor: pointer;
+    float: right;
+    font-size: 150%;
+}
