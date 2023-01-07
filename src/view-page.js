@@ -121,9 +121,9 @@
         const form = document.forms['vortmaro-word-error-report'];
 
         const data = new FormData();
-        data.append('lang', form.lang.value);
-        data.append('word', form.word.value);
-        data.append('problem', form.problem.value);
+        data.append('lang', form.elements.lang.value);
+        data.append('word', form.elements.word.value);
+        data.append('problem', form.elements.problem.value);
 
         fetch(wordReportUrl, {
             method: 'POST',
