@@ -194,7 +194,7 @@
             const errNode = document.createElement('p');
             let errText = '- not found -';
             if (wordDefinition.error) {
-                errText = '- server error -';
+                errText = '- ' + wordDefinition.error + ' -';
             }
             errNode.setAttribute('class', 'vortmaro-reader-error');
             errNode.appendChild(document.createTextNode(errText));
