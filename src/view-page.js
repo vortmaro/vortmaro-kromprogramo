@@ -13,8 +13,11 @@
     const jsonFetch = function(url, handlerFunc, ...additionalArgs) {
         fetch(url).then(function(response) {
             if (!response.ok || response.status != 200) {
-                console.error("Server error");
-                return {error: true};
+                try {
+                    return response.json();
+                } catch (err) {
+                }
+                return {error: "Unknown error"};
             }
             return response.json();
         }).then(function (json) {
