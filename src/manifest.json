@@ -9,13 +9,17 @@
         "*://vortmaro.org/*"
     ],
     "background": {
-        "scripts": ["background.js"]
+        "scripts": [
+            "components/lookup.js",
+            "background.js"
+        ]
     },
     "content_scripts": [
         {
             "exclude_matches": ["*://developer.mozilla.org/*"],
             "matches": ["*://*/*"],
             "js": [
+                "components/lookup.js",
                 "components/declensionCruncher.js",
                 "components/audio.js",
                 "components/file.js",

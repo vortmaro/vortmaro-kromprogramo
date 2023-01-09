@@ -1,22 +1,22 @@
 function onCreated() {
-    if (browser.runtime.lastError) {
-        console.log(`Error: ${browser.runtime.lastError}`);
+    if (chrome.runtime.lastError) {
+        console.log(`Error: ${chrome.runtime.lastError}`);
     }
 }
 
-browser.contextMenus.create(
+chrome.contextMenus.create(
     {
         id: "vortmaro-partial-lookup",
-        title: browser.i18n.getMessage("menuItemLookup"),
+        title: chrome.i18n.getMessage("menuItemLookup"),
         contexts: ["selection"],
     },
     onCreated
 );
 
-browser.contextMenus.onClicked.addListener((info, tab) => {
+chrome.contextMenus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
         case "vortmaro-partial-lookup":
-            browser.tabs.executeScript(tab.id, {
+            chrome.tabs.executeScript(tab.id, {
                 code: 'partialLookup();'
             });
             break;
