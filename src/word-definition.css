@@ -11,8 +11,11 @@
     display: none;
 }
 
-#vortmaro-reader-word-definition p {
+#vortmaro-reader-word-definition {
     font-size: 12pt;
+}
+
+#vortmaro-reader-word-definition p {
     margin-top: 0.3em;
     margin-bottom: 0;
 }
@@ -21,14 +24,28 @@
     margin-top: 0;
 }
 
+#vortmaro-reader-word-definition ol, #vortmaro-reader-word-definition ul {
+    list-style-image: none;
+    list-style-position: outside;
+}
+
 #vortmaro-reader-word-definition ol {
     margin-top: 0.4em;
     margin-bottom: 0;
-    padding-left: 1.5em;
+    padding-left: 1.8em;
+    list-style-type: decimal;
 }
 
 #vortmaro-reader-word-definition ul {
     padding-left: 1.5em;
+    list-style-type: disc;
+}
+
+#vortmaro-reader-word-definition li {
+    list-style-image: none;
+    list-style-position: outside;
+    line-height: normal;
+    padding: 0;
 }
 
 #vortmaro-reader-word-definition img {
@@ -39,4 +56,14 @@
     cursor: pointer;
     float: right;
     font-size: 150%;
+}
+
+#vortmaro-word-error-report textarea {
+    width: calc(100% - 8px);
+    height: 4em;
+}
+
+#vortmaro-word-error-report button {
+    padding: 1px 4px;
+    width: 100%;
 }
