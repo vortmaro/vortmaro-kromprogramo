@@ -5,14 +5,13 @@
     "version": "0.1.2",
     "permissions": [
         "activeTab",
-        "contextMenus",
-        "*://vortmaro.org/*"
+        "contextMenus"
+    ],
+    "host_permissions": [
+        "https://vortmaro.org/*"
     ],
     "background": {
-        "scripts": [
-            "components/lookup.js",
-            "background.js"
-        ]
+        "service_worker": "chrome-bg.js"
     },
     "content_scripts": [
         {
@@ -32,5 +31,5 @@
             ]
         }
     ],
-    "manifest_version": 2
+    "manifest_version": 3
 }
