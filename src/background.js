@@ -16,9 +16,7 @@ chrome.contextMenus.create(
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
         case "vortmaro-partial-lookup":
-            chrome.tabs.executeScript(tab.id, {
-                code: 'partialLookup();'
-            });
+            chrome.tabs.sendMessage(tab.id, {action: "partial_lookup"});
             break;
     }
 });

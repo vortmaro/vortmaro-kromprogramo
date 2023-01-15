@@ -11,7 +11,7 @@
         "https://vortmaro.org/*"
     ],
     "background": {
-        "service_worker": "chrome-bg.js"
+        "service_worker": "background.js"
     },
     "content_scripts": [
         {
