@@ -10,7 +10,6 @@
     ],
     "background": {
         "scripts": [
-            "components/lookup.js",
             "background.js"
         ]
     },
