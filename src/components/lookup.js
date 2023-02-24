@@ -1,3 +1,16 @@
+// Whether lookups are enabled
+// TODO: when reloading page or opening in new tab, look at tab value
+let enabled = false;
+
+function setEnabled(toEnable) {
+    enabled = !!toEnable;
+    // TODO: hide an existing result upon disabling
+}
+
+function logMessage(msg) {
+    console.log(msg);
+}
+
 // Delay (in ms) between mouse movement ending and showing word definition
 const showDelay = 0;
 // Actually look up the words; false for testing just extracting words
