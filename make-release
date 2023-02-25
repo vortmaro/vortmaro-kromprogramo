@@ -1,0 +1,7 @@
+#!/bin/bash
+
+VERSION_LINE=`grep version src/manifest.json|grep -v manifest`
+VERSION=`grep version src/manifest.json|grep -v manifest |sed 's/.*"\([0-9]\+\.[0-9]\+\.[0-9]\+\(-[a-z]\+\)\?\).*".*/\1/'`
+
+cd src
+zip ../release-${VERSION}.zip `find . -name '*.js' -o -name '*.json' -o -name '*.png' -o -name '*.css'`
