@@ -553,6 +553,9 @@ const nodeIsInDefinition = function(node) {
 };
 
 const addAltText = function() {
+    if (!enabled) {
+        return;
+    }
     const imgs = body.getElementsByTagName('img');
     for (let i = 0; i < imgs.length; ++i) {
         let img = imgs.item(i);
