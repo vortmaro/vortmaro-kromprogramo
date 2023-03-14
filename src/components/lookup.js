@@ -19,6 +19,7 @@ const body = document.getElementsByTagName('body').item(0);
 const urlBase = 'https://vortmaro.org';
 const wordLookupUrl = urlBase + '/api/word/fetch';
 const wordReportUrl = urlBase + '/api/word/report';
+const cardAddUrl = urlBase + '/api/card/add';
 
 let definitionDiv = null;
 let loadingP = null;
@@ -131,6 +132,7 @@ const getNodeWordAtOffset = function(node, offset) {
         word = word.substring(0, word.length - 1);
     }
     return {
+        sentence: extractSentence(elementText, start),
         start: start,
         offset: offset - start,
         word: word
@@ -182,7 +184,131 @@ const addErrorReportBox = function(wrapperNode, wordDetails) {
     submitButton.onclick = sendReport;
     form.appendChild(submitButton);
 
-    wrapperNode.appendChild(form)
+    wrapperNode.appendChild(form);
+};
+
+const getAuthToken = function() {
+    return browser.storage.local.get('authToken').then((result) => {
+        console.log("Token from storage: ", result);
+        return result.authToken;
+    }, (failure) => {
+        console.log("Failure getting token: ", failure);
+        return null;
+    });
+}
+
+const sendFlashcardRequest = function(form, authToken) {
+    const data = JSON.stringify({
+        wordId: Number(form.elements['wordId'].value),
+        cardTypes: ["from", "to", "sentence"],
+        definitionId: Number(form.elements['definitionId'].value),
+        url: getCurrentUrl(),
+        sentence: form.elements['sentence'].value,
+        xpath: ""
+    });
+
+    const headers = new Headers();
+    headers.append(
+        'Authorization',
+        'Bearer ' + authToken
+    );
+    headers.append(
+        'Content-Type',
+        'application/json'
+    );
+
+    fetch(cardAddUrl, {
+        method: 'POST',
+        headers: headers,
+        body: data,
+    })
+    .then((response) => {
+        return response.json();
+    })
+    .then((data) => {
+        console.log(data);
+    });
+}
+
+const prepAndSendFlashcardRequest = function(form) {
+    getAuthToken().then((authToken) => {
+        if (authToken === null) {
+            console.error("Failed to get auth token");
+            return;
+        }
+        sendFlashcardRequest(form, authToken);
+
+        let forms = document.getElementsByClassName('vortmaro-create-flashcards');
+        for (let i = forms.length - 1; i >= 0; --i) {
+            let flashcardForm = forms.item(i);
+            flashcardForm.parentNode.removeChild(flashcardForm);
+        }
+    });
+};
+
+const extractSentence = function(text, start) {
+    let sentence = text;
+    let sentenceStartPos = 0;
+    for (let i = 0; i < start; ++i) {
+        if (sentence[i] == '.' || sentence[i] == '。') {
+            sentenceStartPos = i + 1;
+        }
+    }
+    let sentenceEndPos = sentence.length;
+    for (let i = sentence.length - 1; i > start; --i) {
+        if (sentence[i] == '.' || sentence[i] == '。') {
+            sentenceEndPos = i + 1;
+        }
+    }
+    sentence = sentence.substring(sentenceStartPos, sentenceEndPos).trim();
+    sentence = sentence.replace(/\s+/, ' ');
+    return sentence;
+}
+
+// Set up a flashcard submission form for a word definition
+const addFlashcardBox = function(wrapperNode, defnDetails, lookupDetails, authToken) {
+    const form = document.createElement('form');
+    form.setAttribute('class', 'vortmaro-create-flashcards');
+
+    const wordIdField = document.createElement('input');
+    wordIdField.setAttribute('type', 'hidden');
+    wordIdField.setAttribute('name', 'wordId');
+    wordIdField.setAttribute('value', defnDetails.wordId);
+    form.appendChild(wordIdField);
+
+    const defnIdField = document.createElement('input');
+    defnIdField.setAttribute('type', 'hidden');
+    defnIdField.setAttribute('name', 'definitionId');
+    defnIdField.setAttribute('value', defnDetails.id);
+    form.appendChild(defnIdField);
+
+    const sentenceField = document.createElement('input');
+    sentenceField.setAttribute('type', 'hidden');
+    sentenceField.setAttribute('name', 'sentence');
+    sentenceField.setAttribute('value', lookupDetails.sentence);
+    form.appendChild(sentenceField);
+
+    const submitP = document.createElement('p');
+    const submitButton = document.createElement('button');
+    submitButton.setAttribute('type', 'button');
+    const submitText = document.createTextNode(
+        'Create flashcard(s) for this definition'
+    );
+    submitButton.appendChild(submitText);
+    submitButton.onclick = function() {
+        prepAndSendFlashcardRequest(form);
+    };
+    form.appendChild(submitButton);
+    wrapperNode.appendChild(form);
+};
+
+const prepAndAddFlashcardBox = function(wrapperNode, defnDetails, lookupDetails) {
+    getAuthToken().then((authToken) => {
+        if (!authToken) {
+            return;
+        }
+        addFlashcardBox(wrapperNode, defnDetails, lookupDetails, authToken);
+    });
 }
 
 const showDefinition = function(
@@ -359,6 +485,11 @@ const showDefinition = function(
             defns.forEach(function(defn) {
                 let li = document.createElement('li');
                 li.innerText = defn.DefnText;
+                const defnParam = {
+                    id: defn.Id,
+                    wordId: word.Id
+                };
+                prepAndAddFlashcardBox(li, defnParam, wordDetails);
                 ol.appendChild(li);
             });
         }
