@@ -38,9 +38,13 @@ const jsonFetch = function(url, handlerFunc, ...additionalArgs) {
     });
 };
 
-const fetchDefinition = function(result, displayFunc) {
+const getCurrentUrl = function() {
     const l = window.location;
-    const source = l.protocol + '//' + l.host + l.pathname + l.search;
+    return l.protocol + '//' + l.host + l.pathname + l.search;
+}
+
+const fetchDefinition = function(result, displayFunc) {
+    const source = getCurrentUrl();
     const pos = result.word.indexOf('-');
     let words = [result.word];
     if (pos != -1) {
