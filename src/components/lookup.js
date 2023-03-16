@@ -189,7 +189,6 @@ const addErrorReportBox = function(wrapperNode, wordDetails) {
 
 const getAuthToken = function() {
     return browser.storage.local.get('authToken').then((result) => {
-        console.log("Token from storage: ", result);
         return result.authToken;
     }, (failure) => {
         console.log("Failure getting token: ", failure);
