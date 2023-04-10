@@ -84,7 +84,7 @@ const isWordChar = function(char) {
         || char == ']' || char == '{' || char == '}' || char == '!'
         || char == '\n' || char == '\r' || char == '\t'
         || char == '/' || char == '|' || char == '\\'
-        || char == '„' || char == '“'
+        || char == '„' || char == '“' || char == '¿' || char == '¡'
         || char == '\xa0'
         || typeof char === 'undefined'
     ) {
