@@ -4,7 +4,9 @@ let enabled = false;
 
 function setEnabled(toEnable) {
     enabled = !!toEnable;
-    // TODO: hide an existing result upon disabling
+    if (!enabled) {
+        hideDefinition();
+    }
 }
 
 function logMessage(msg) {
