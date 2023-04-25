@@ -474,6 +474,22 @@ const showDefinition = function(
             definitionDiv.appendChild(ul);
         }
 
+        let components = [];
+        if (word.Components && word.Components.length > 0) {
+            components = word.Components;
+        } else if (baseWord && baseWord.Components) {
+            components = baseWord.Components;
+        }
+        if (components.length > 0) {
+            p = document.createElement('p');
+            let em = document.createElement('em');
+            em.innerText = 'Components: ';
+            p.appendChild(em);
+            let componentText = components.join(' + ');
+            p.appendChild(document.createTextNode(componentText));
+            definitionDiv.append(p);
+        }
+
         let defns = [];
         if (word.Definitions) {
             defns = word.Definitions;
