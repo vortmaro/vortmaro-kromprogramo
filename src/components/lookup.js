@@ -533,7 +533,7 @@ let lastWord = {
 };
 const determineLanguage = function(node)  {
     if (node.hasAttribute && node.hasAttribute('lang')) {
-        return node.getAttribute('lang');
+        return node.getAttribute('lang').toLowerCase();
     }
     if (node.parentNode) {
         return determineLanguage(node.parentNode);
@@ -550,7 +550,7 @@ const determineLanguage = function(node)  {
             if (meta.getAttribute('name').toLowerCase() != 'content-language') {
                 continue;
             }
-            return meta.getAttribute('content');
+            return meta.getAttribute('content').toLowerCase();
         }
     }
     return null;
