@@ -67,6 +67,9 @@ const fetchDefinition = function(result, displayFunc) {
         let url = wordLookupUrl + '?word=' + encodeURIComponent(word)
             + '&source=' + encodeURIComponent(source)
             + '&lang=' + encodeURIComponent(result.lang.toLowerCase());
+        if (result.followWord) {
+            url += '&follow=' + encodeURIComponent(result.followWord);
+        }
         fetchResult = jsonFetch(url, displayFunc, result);
         // console.log("Result for " + word, fetchResult);
         if (fetchResult && fetchResult.Words) {
@@ -95,7 +98,7 @@ const isWordChar = function(char) {
     return true;
 };
 
-const getNodeWordAtOffset = function(node, offset) {
+const getNodeWordAtOffset = function(node, offset, isFinal) {
     let elementText = node.innerText || node.data;
 
     if (elementText.length == 0 || !isWordChar(elementText[offset])) {
@@ -133,12 +136,40 @@ const getNodeWordAtOffset = function(node, offset) {
     if (word[word.length - 1] == "'") {
         word = word.substring(0, word.length - 1);
     }
-    return {
+
+    let result = {
         sentence: extractSentence(elementText, start),
         start: start,
         offset: offset - start,
-        word: word
+        word: word,
+        lang: determineLanguage(node)
     };
+
+    if (isFinal) {
+        return result;
+    }
+    if (!result.lang.match(/^deu?($|[_-])/)) {
+        return result;
+    }
+
+    // Provide the last word of the sentence or phrase for the server to identify German separable verbs
+    let endPhraseChars = ['.', ',', ';', '!', '?'];
+    let endPhrasePos = elementText.length -1;
+    let i = nextSpace;
+    while (i < elementText.length) {
+        ++i;
+        if (endPhraseChars.includes(elementText[i])) {
+            endPhrasePos = i;
+            break;
+        }
+    }
+    if (endPhrasePos == -1) {
+        return result;
+    }
+    let followWord = getNodeWordAtOffset(node, endPhrasePos - 1, true);
+    result.followWord = followWord.word;
+
+    return result;
 };
 
 const sendReport = function() {
@@ -557,7 +588,7 @@ const determineLanguage = function(node)  {
 };
 
 const showClickedWord = function(node, offset, ev) {
-    const result = getNodeWordAtOffset(node, offset);
+    const result = getNodeWordAtOffset(node, offset, false);
     showWord(node, result, ev);
 }
 
@@ -570,7 +601,7 @@ const showWord = function(node, result, ev) {
         // console.log('Current word:', result.word);
         lastWord.node = node;
         lastWord.start = result.start;
-        result.lang = determineLanguage(node);
+
         if (!result.lang) {
             // TODO: smarter detection method, and/or allow user to specify
             window.alert('Unable to determine text language, sorry');
@@ -622,6 +653,7 @@ function partialLookup() {
         start: selection.anchorOffset,
         offset: selection.focusOffset - selection.anchorOffset,
         word: nodeText.substring(selection.anchorOffset, selection.focusOffset),
+        lang: determineLanguage(selection.anchorNode),
     };
 
     showTimer = window.setTimeout(
