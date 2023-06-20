@@ -1,16 +1,16 @@
-function cruncherRun(arrayDeclensions)
+function cruncherRun(arrayInflections)
 {
-    this.newDeclensions = [];
+    this.newInflections = [];
 
     /**
      * 
      * @param string[] baseRow Base row to combine with matching rows
      * @param int[] matchingVals Positions of values which match across relevant rows
      * @param int[] matchingRows Rows with values that match base row in the relevant positions
-     * @param array[] arrayDeclensions All declensions (i.e. all rows)
+     * @param array[] arrayInflections All declensions (i.e. all rows)
      * @returns 
      */
-    this.crunchRow = function(baseRow, matchingVals, matchingRows, arrayDeclensions)
+    this.crunchRow = function(baseRow, matchingVals, matchingRows, arrayInflections)
     {
         var crunchedRow = [];
         for (let i = 0; i < baseRow.length; ++i) {
@@ -20,7 +20,7 @@ function cruncherRun(arrayDeclensions)
                 let crunchVals = [baseRow[i]];
                 for (let j = 0 ; j < matchingRows.length; ++j) {
                     let idx = matchingRows[j];
-                    let crunchVal = arrayDeclensions[idx][i];
+                    let crunchVal = arrayInflections[idx][i];
                     if (crunchVals.includes(crunchVal)) {
                         continue;
                     }
@@ -35,19 +35,19 @@ function cruncherRun(arrayDeclensions)
 
     /**
      * 
-     * @param int i Index of current declension (in arrayDeclensions)
+     * @param int i Index of current declension (in arrayInflections)
      * @param array[] processed List of indexes of processed declensions
      */
     this.crunchMatching = function(i, processed)
     {
-        let row1 = arrayDeclensions[i];
+        let row1 = arrayInflections[i];
         let matchingVals = [];
         let matchingRows = [];
-        for (let j = 0; j < arrayDeclensions.length; ++j) {
+        for (let j = 0; j < arrayInflections.length; ++j) {
             if (i == j || processed.includes(j)) {
                 continue;
             }
-            let row2 = arrayDeclensions[j];
+            let row2 = arrayInflections[j];
             if (row1.length != row2.length) {
                 continue;
             }
@@ -90,7 +90,7 @@ function cruncherRun(arrayDeclensions)
         if (matchingRows.length == 0) {
             if (!processed.includes(i)) {
                 processed.push(i);
-                this.newDeclensions.push(row1);
+                this.newInflections.push(row1);
             }
             return;
         }
@@ -98,55 +98,55 @@ function cruncherRun(arrayDeclensions)
         let matchingRowList = [i];
         matchingRowList.push(...matchingRows);
 
-        let crunchedRow = this.crunchRow(row1, matchingVals, matchingRows, arrayDeclensions);
+        let crunchedRow = this.crunchRow(row1, matchingVals, matchingRows, arrayInflections);
 
-        this.newDeclensions.push(crunchedRow);
+        this.newInflections.push(crunchedRow);
     }
 }
 
 /**
  * Convert list of {attr1:val1, attr2:val2, ...} mappings to just the values [val1, val2, ...]
  * 
- * @param array objectDeclensions 
+ * @param array objectInflections 
  * @returns 
  */
-function convertDeclensionsToValues(objectDeclensions)
+function convertInflectionsToValues(objectInflections)
 {
-    var arrayDeclensions = [];
-    for (let i = 0; i < objectDeclensions.length; ++i) {
-        let keys = Object.keys(objectDeclensions[i]);
+    var arrayInflections = [];
+    for (let i = 0; i < objectInflections.length; ++i) {
+        let keys = Object.keys(objectInflections[i]);
         let vals = [];
         for (let j = 0; j < keys.length; ++j) {
-            vals.push(objectDeclensions[i][keys[j]]);
+            vals.push(objectInflections[i][keys[j]]);
         }
-        arrayDeclensions.push(vals);
+        arrayInflections.push(vals);
     }
-    return arrayDeclensions;
+    return arrayInflections;
 }
 
-function crunchDeclensions(objectDeclensions) {
-    var arrayDeclensions = convertDeclensionsToValues(objectDeclensions);
+function crunchInflections(objectInflections) {
+    var arrayInflections = convertInflectionsToValues(objectInflections);
 
     // Perform multiple rounds of crunching rows whose values match except for 1
     let roundNum = 1;
-    var newDeclensions = [];
+    var newInflections = [];
     do {
-        let cruncher = new cruncherRun(arrayDeclensions);
+        let cruncher = new cruncherRun(arrayInflections);
         let processed = [];
-        for (let i = 0; i < arrayDeclensions.length; ++i) {
+        for (let i = 0; i < arrayInflections.length; ++i) {
             if (processed.includes(i)) {
                 continue;
             }
             cruncher.crunchMatching(i, processed);
         }
 
-        newDeclensions = cruncher.newDeclensions;
-        if (newDeclensions.length == arrayDeclensions.length) {
+        newInflections = cruncher.newInflections;
+        if (newInflections.length == arrayInflections.length) {
             break;
         }
 
-        arrayDeclensions = newDeclensions;
+        arrayInflections = newInflections;
     } while (++roundNum < 6);
 
-    return newDeclensions;
+    return newInflections;
 }

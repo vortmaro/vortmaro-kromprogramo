@@ -490,12 +490,12 @@ const showDefinition = function(
         }
         definitionDiv.appendChild(p);
 
-        if (word.Declensions && word.Declensions.length > 0) {
+        if (word.Inflections && word.Inflections.length > 0) {
             let ul = document.createElement('ul');
 
-            // Crunch declension list down into manageable list
+            // Crunch inflection list down into manageable list
             // E.g. German adjectives can have >20 matching declensions
-            let crunched = crunchDeclensions(word.Declensions);
+            let crunched = crunchInflections(word.Inflections);
             ul = document.createElement('ul');
             for (let i = 0; i < crunched.length; ++i) {
                 let decl = crunched[i];
