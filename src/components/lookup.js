@@ -434,6 +434,7 @@ const showDefinition = function(
 
         const arrow = ' → ';
         let parentWord = null;
+        let grandparentWord = null;
         if (word.Images && word.Images.length > 0) {
             word.Images.forEach(function(image) {
                 let imgNode = document.createElement('img');
@@ -450,6 +451,10 @@ const showDefinition = function(
             parentWord = word.ParentWord;
             strong.innerText = (parentWord.DisplayAs || parentWord.Word) + arrow + strong.innerText;
         }
+        if (word.GrandparentWord && word.GrandparentWord.Word) {
+            grandparentWord = word.GrandparentWord;
+            strong.innerText = (grandparentWord.DisplayAs || grandparentWord.Word) + arrow + strong.innerText;
+        }
         p.appendChild(strong);
         definitionDiv.appendChild(p);
 
@@ -465,6 +470,12 @@ const showDefinition = function(
         // Show role and attributes
         p = document.createElement('p');
         p.innerText = word.Role;
+        if (parentWord && parentWord.Role != word.Role) {
+            p.innerText = parentWord.Role + arrow + p.innerText;
+            if (grandparentWord && grandparentWord.Role != parentWord.Role) {
+                p.innerText = grandparentWord.Role + arrow + p.innerText;
+            }
+        }
         if (attrs.length > 0) {
             p.innerText += ' (' + attrs.join(', ') + ')';
         }
