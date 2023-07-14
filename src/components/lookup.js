@@ -48,34 +48,14 @@ const getCurrentUrl = function() {
 
 const fetchDefinition = function(result, displayFunc) {
     const source = getCurrentUrl();
-    const pos = result.word.indexOf('-');
-    let words = [result.word];
-    if (pos != -1) {
-        // console.log("Found '-' at pos " + pos + " in ", result);
-        let subWord = '';
-        if (pos < result.offset) {
-            subWord = result.word.substring(pos + 1);
-        } else {
-            subWord = result.word.substring(0, pos);
-        }
-        // console.log("Subword: " + subWord);
-        words.push(subWord);
+    let word = result.word;
+    let url = wordLookupUrl + '?word=' + encodeURIComponent(word)
+        + '&source=' + encodeURIComponent(source)
+        + '&lang=' + encodeURIComponent(result.lang.toLowerCase());
+    if (result.followWord) {
+        url += '&follow=' + encodeURIComponent(result.followWord);
     }
-    let fetchResult = null;
-    for (let i = 0; i < words.length; ++i) {
-        let word = words[i];
-        let url = wordLookupUrl + '?word=' + encodeURIComponent(word)
-            + '&source=' + encodeURIComponent(source)
-            + '&lang=' + encodeURIComponent(result.lang.toLowerCase());
-        if (result.followWord) {
-            url += '&follow=' + encodeURIComponent(result.followWord);
-        }
-        fetchResult = jsonFetch(url, displayFunc, result);
-        // console.log("Result for " + word, fetchResult);
-        if (fetchResult && fetchResult.Words) {
-            return fetchResult
-        }
-    }
+    fetchResult = jsonFetch(url, displayFunc, result);
     return fetchResult;
 };
 
