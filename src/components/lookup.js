@@ -369,7 +369,7 @@ const showDefinition = function(
 
     // Split words when there are child and non-child definitions with a parent word
     for (const word of wordDefinition.Words) {
-        if (word.BaseWord.Word == "" || word.Definitions === null) {
+        if (word.ParentWord.Word == "" || word.Definitions === null) {
             words.push(word);
             continue;
         }
@@ -396,8 +396,8 @@ const showDefinition = function(
         let wordWithoutParent = structuredClone(word);
         wordWithoutParent.Definitions = nonParentDefns;
         wordWithoutParent.BaseForm = 0;
-        wordWithoutParent.BaseWord.Word = ""
-        wordWithoutParent.BaseWord.Id = 0;
+        wordWithoutParent.ParentWord.Word = ""
+        wordWithoutParent.ParentWord.Id = 0;
         words.push(wordWithoutParent);
 
         let wordWithParent = structuredClone(word);
@@ -433,7 +433,7 @@ const showDefinition = function(
         }
 
         const arrow = ' → ';
-        let baseWord = null;
+        let parentWord = null;
         if (word.Images && word.Images.length > 0) {
             word.Images.forEach(function(image) {
                 let imgNode = document.createElement('img');
@@ -446,9 +446,9 @@ const showDefinition = function(
         let p = document.createElement('p');
         let strong = document.createElement('strong');
         strong.innerText = word.DisplayAs || word.Word;
-        if (word.BaseWord && word.BaseWord.Word) {
-            baseWord = word.BaseWord;
-            strong.innerText = (baseWord.DisplayAs || baseWord.Word) + arrow + strong.innerText;
+        if (word.ParentWord && word.ParentWord.Word) {
+            parentWord = word.ParentWord;
+            strong.innerText = (parentWord.DisplayAs || parentWord.Word) + arrow + strong.innerText;
         }
         p.appendChild(strong);
         definitionDiv.appendChild(p);
@@ -456,8 +456,8 @@ const showDefinition = function(
         addAudio(definitionDiv, word, includedAudio);
 
         let attrs = [];
-        if (baseWord && baseWord.Attributes) {
-            attrs = Object.values(baseWord.Attributes);
+        if (parentWord && parentWord.Attributes) {
+            attrs = Object.values(parentWord.Attributes);
         } else if (word.Attributes) {
             attrs = Object.values(word.Attributes);
         }
@@ -490,8 +490,8 @@ const showDefinition = function(
         let components = [];
         if (word.Components && word.Components.length > 0) {
             components = word.Components;
-        } else if (baseWord && baseWord.Components) {
-            components = baseWord.Components;
+        } else if (parentWord && parentWord.Components) {
+            components = parentWord.Components;
         }
         if (components.length > 0) {
             p = document.createElement('p');
@@ -506,8 +506,8 @@ const showDefinition = function(
         let defns = [];
         if (word.Definitions) {
             defns = word.Definitions;
-        } else if (baseWord && baseWord.Definitions) {
-            defns = baseWord.Definitions;
+        } else if (parentWord && parentWord.Definitions) {
+            defns = parentWord.Definitions;
         }
         if (defns.length > 0) {
             let ol = document.createElement('ol');

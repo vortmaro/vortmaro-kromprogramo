@@ -10,9 +10,9 @@ function addAudio(definitionDiv, word, includedAudio)
             }
         }
     }
-    if (word.BaseWord.Audio != null) {
-        for (let i = 0; i < word.BaseWord.Audio.length; ++i) {
-            let url = word.BaseWord.Audio[i].Url;
+    if (word.ParentWord.Audio != null) {
+        for (let i = 0; i < word.ParentWord.Audio.length; ++i) {
+            let url = word.ParentWord.Audio[i].Url;
             if (!includedAudio.includes(url)) {
                 wordAudioUrls.push(url);
                 includedAudio.push(url);
