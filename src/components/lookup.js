@@ -513,9 +513,9 @@ const showDefinition = function(
             definitionDiv.append(p);
         }
 
-        let defns = [];
-        if (word.Definitions) {
-            defns = word.Definitions;
+        let defns = word.Definitions;
+        if (grandparentWord && grandparentWord.Definitions) {
+            defns = grandparentWord.Definitions;
         } else if (parentWord && parentWord.Definitions) {
             defns = parentWord.Definitions;
         }
