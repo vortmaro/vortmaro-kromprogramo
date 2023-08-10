@@ -147,7 +147,7 @@ const getNodeWordAtOffset = function(node, offset, isFinal) {
         return result;
     }
     let followWord = getNodeWordAtOffset(node, endPhrasePos - 1, true);
-    if (followWord.word != result.word) {
+    if (followWord && followWord.word != result.word) {
         result.followWord = followWord.word;
     }
 
