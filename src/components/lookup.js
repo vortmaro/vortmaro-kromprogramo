@@ -479,6 +479,19 @@ const showDefinition = function(
         if (attrs.length > 0) {
             p.innerText += ' (' + attrs.join(', ') + ')';
         }
+
+        // Show usage tip
+        let usageTip = word.UsageTip;
+        if (parentWord && parentWord.UsageTip) {
+            usageTip = parentWord.UsageTip;
+        }
+        if (grandparentWord && grandparentWord.UsageTip) {
+            usageTip = grandparentWord.UsageTip;
+        }
+        if (usageTip) {
+            p.innerText += ' (' + usageTip + ')';
+        }
+
         definitionDiv.appendChild(p);
 
         if (word.Inflections && word.Inflections.length > 0) {
