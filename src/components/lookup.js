@@ -418,7 +418,10 @@ const showDefinition = function(
             // (or preload list of dict details on startup)
             if (dict == 'wktn') {
                 dictName = 'Wiktionary';
-                copyrightText = '© CC BY-SA 3.0';
+                copyrightText = '© CC BY-SA 4.0';
+            } else if (dict == 'wkpd') {
+                dictName = 'Wikipedia';
+                copyrightText = '© CC BY-SA 4.0';
             }
 
             let dictP = document.createElement('p');
