@@ -495,7 +495,9 @@ const showDefinition = function(
             p.innerText += ' (' + usageTip + ')';
         }
 
-        definitionDiv.appendChild(p);
+        if (p.innerText != 'tbd') {
+            definitionDiv.appendChild(p);
+        }
 
         if (word.Inflections && word.Inflections.length > 0) {
             let ul = document.createElement('ul');
