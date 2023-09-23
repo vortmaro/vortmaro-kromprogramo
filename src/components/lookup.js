@@ -701,6 +701,10 @@ const handleClick = function (ev) {
         return;
     }
 
+    if (!enabled) {
+        return;
+    }
+
     // TODO: allow different configs for causing word lookups
     ev.stopPropagation();
     if (showTimer) {
