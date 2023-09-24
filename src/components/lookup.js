@@ -214,6 +214,7 @@ const getAuthToken = function() {
 const sendFlashcardRequest = function(form, authToken) {
     const data = JSON.stringify({
         wordId: Number(form.elements['wordId'].value),
+        ancestorIds: form.elements['ancestorIds'].value,
         cardTypes: ["from", "to", "sentence"],
         definitionId: Number(form.elements['definitionId'].value),
         url: getCurrentUrl(),
@@ -289,6 +290,12 @@ const addFlashcardBox = function(wrapperNode, defnDetails, lookupDetails, authTo
     wordIdField.setAttribute('name', 'wordId');
     wordIdField.setAttribute('value', defnDetails.wordId);
     form.appendChild(wordIdField);
+
+    const ancestorsField = document.createElement('input');
+    ancestorsField.setAttribute('type', 'hidden');
+    ancestorsField.setAttribute('name', 'ancestorIds');
+    ancestorsField.setAttribute('value', defnDetails.ancestorIds.join(','));
+    form.appendChild(ancestorsField);
 
     const defnIdField = document.createElement('input');
     defnIdField.setAttribute('type', 'hidden');
@@ -543,9 +550,17 @@ const showDefinition = function(
             defns.forEach(function(defn) {
                 let li = document.createElement('li');
                 li.innerText = defn.DefnText;
+                let ancestorIds = [];
+                if (parentWord && parentWord.Id) {
+                    ancestorIds.push(parentWord.Id)
+                }
+                if (grandparentWord && grandparentWord.Id) {
+                    ancestorIds.push(grandparentWord.Id)
+                }
                 const defnParam = {
                     id: defn.Id,
-                    wordId: word.Id
+                    wordId: word.Id,
+                    ancestorIds: ancestorIds
                 };
                 prepAndAddFlashcardBox(li, defnParam, wordDetails);
                 ol.appendChild(li);
