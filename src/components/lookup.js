@@ -675,6 +675,7 @@ function partialLookup() {
 
     const nodeText = selection.anchorNode.innerText || selection.anchorNode.data;
     const result = {
+        sentence: extractSentence(nodeText, selection.anchorOffset),
         start: selection.anchorOffset,
         offset: selection.focusOffset - selection.anchorOffset,
         word: nodeText.substring(selection.anchorOffset, selection.focusOffset),
