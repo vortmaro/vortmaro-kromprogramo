@@ -682,10 +682,16 @@ function partialLookup() {
     }
 
     const nodeText = selection.anchorNode.innerText || selection.anchorNode.data;
+    let start = selection.anchorOffset;
+    let offset = selection.focusOffset - selection.anchorOffset;
+    if (offset < 0) {
+        start += offset;
+        offset = -offset;
+    }
     const result = {
         sentence: extractSentence(nodeText, selection.anchorOffset),
-        start: selection.anchorOffset,
-        offset: selection.focusOffset - selection.anchorOffset,
+        start: start,
+        offset: offset,
         word: nodeText.substring(selection.anchorOffset, selection.focusOffset),
         lang: determineLanguage(selection.anchorNode),
     };
