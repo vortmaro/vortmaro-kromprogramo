@@ -219,6 +219,7 @@ const sendFlashcardRequest = function(form, authToken) {
         definitionId: Number(form.elements['definitionId'].value),
         url: getCurrentUrl(),
         sentence: form.elements['sentence'].value,
+        start: form.elements['start'].value,
         xpath: ""
     });
 
@@ -308,6 +309,13 @@ const addFlashcardBox = function(wrapperNode, defnDetails, lookupDetails, authTo
     sentenceField.setAttribute('name', 'sentence');
     sentenceField.setAttribute('value', lookupDetails.sentence);
     form.appendChild(sentenceField);
+
+    // position in sentence
+    const startField = document.createElement('input');
+    startField.setAttribute('type', 'hidden');
+    startField.setAttribute('name', 'start');
+    startField.setAttribute('value', lookupDetails.start);
+    form.appendChild(startField);
 
     const submitP = document.createElement('p');
     const submitButton = document.createElement('button');
