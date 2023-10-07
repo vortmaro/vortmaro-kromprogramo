@@ -219,7 +219,7 @@ const sendFlashcardRequest = function(form, authToken) {
         definitionId: Number(form.elements['definitionId'].value),
         url: getCurrentUrl(),
         sentence: form.elements['sentence'].value,
-        start: form.elements['start'].value,
+        start: Number(form.elements['start'].value),
         xpath: ""
     });
 
