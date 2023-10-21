@@ -456,7 +456,11 @@ const showDefinition = function(
         if (word.Images && word.Images.length > 0) {
             word.Images.forEach(function(image) {
                 let imgNode = document.createElement('img');
-                imgNode.setAttribute('src', urlBase + image.Filename);
+                let imgSrc = image.Filename;
+                if (imgSrc.substring(0, 2) != '//') {
+                    imgSrc = urlBase + imgSrc;
+                }
+                imgNode.setAttribute('src', imgSrc);
                 definitionDiv.appendChild(imgNode);
             });
         }
