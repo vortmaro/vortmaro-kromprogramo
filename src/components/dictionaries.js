@@ -15,8 +15,17 @@ function addLookupLinks(wrapperNode, wordDetails) {
     const dictionaries = [
         {
             name: 'Wiktionary',
-            short: 'W',
+            icon: '/img/wiktionary.png',
             url: 'https://en.wiktionary.org/w/index.php',
+            params: {
+                search: '$word',
+                ns0: 1,
+            }
+        },
+        {
+            name: 'Wikipedia',
+            icon: '/img/wikipedia.png',
+            url: 'https://en.wikipedia.org/w/index.php',
             params: {
                 search: '$word',
                 ns0: 1,
@@ -41,8 +50,12 @@ function addLookupLinks(wrapperNode, wordDetails) {
         }
         link.setAttribute('href', url);
         link.setAttribute('target', targetName(dict.name));
-        link.setAttribute('title', 'Check ' + dict.name);
-        link.appendChild(document.createTextNode(dict.short));
+        link.setAttribute('title', dict.name);
+        // TODO: find a way to load from within addon rather than fetching from server
+        let img = document.createElement('img');
+        img.setAttribute('src', urlBase + dict.icon);
+        img.setAttribute('class', 'dict-icon');
+        link.appendChild(img);
         lookupP.appendChild(document.createTextNode(' '));
         lookupP.appendChild(link);
     });
