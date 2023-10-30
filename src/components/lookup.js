@@ -478,6 +478,21 @@ const showDefinition = function(
             strong.innerText = (grandparentWord.DisplayAs || grandparentWord.Word) + arrow + strong.innerText;
         }
         p.appendChild(strong);
+
+        let defns = word.Definitions;
+        if (grandparentWord && grandparentWord.Definitions) {
+            defns = grandparentWord.Definitions;
+        } else if (parentWord && parentWord.Definitions) {
+            defns = parentWord.Definitions;
+        }
+
+        if (defns.length == 1) {
+            const firstTrans = defns[0].TranslatedWord;
+            if (firstTrans && firstTrans != strong.innerText) {
+                p.appendChild(document.createTextNode(' - ' + firstTrans));
+            }
+        }
+
         definitionDiv.appendChild(p);
 
         addAudio(definitionDiv, word, includedAudio);
@@ -550,12 +565,6 @@ const showDefinition = function(
             definitionDiv.append(p);
         }
 
-        let defns = word.Definitions;
-        if (grandparentWord && grandparentWord.Definitions) {
-            defns = grandparentWord.Definitions;
-        } else if (parentWord && parentWord.Definitions) {
-            defns = parentWord.Definitions;
-        }
         if (defns.length > 0) {
             let ol = document.createElement('ol');
             definitionDiv.appendChild(ol);
