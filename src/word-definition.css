@@ -54,6 +54,7 @@
 
 #vortmaro-reader-word-definition img.dict-icon {
     height: 24px;
+    vertical-align: bottom;
 }
 
 #vortmaro-reader-word-definition .popover-close {
