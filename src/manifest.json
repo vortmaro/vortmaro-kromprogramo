@@ -19,6 +19,7 @@
             "exclude_matches": ["*://developer.mozilla.org/*"],
             "matches": ["*://*/*"],
             "js": [
+                "components/langs.js",
                 "components/lookup.js",
                 "components/declensionCruncher.js",
                 "components/audio.js",

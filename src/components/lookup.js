@@ -374,7 +374,7 @@ const showDefinition = function(
         errNode.setAttribute('class', 'vortmaro-reader-error');
         errNode.appendChild(document.createTextNode(errText));
         definitionDiv.appendChild(errNode);
-        addLookupLinks(definitionDiv, wordDetails);
+        addLookupLinks(definitionDiv, null, wordDetails);
         addErrorReportBox(definitionDiv, wordDetails);
         return;
     }
@@ -588,7 +588,7 @@ const showDefinition = function(
             });
         }
     });
-    addLookupLinks(definitionDiv, wordDetails);
+    addLookupLinks(definitionDiv, wordDefinition, wordDetails);
     addErrorReportBox(definitionDiv, wordDetails);
     definitionDiv.style.display = 'block';
 };
