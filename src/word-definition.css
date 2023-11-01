@@ -57,6 +57,17 @@
     vertical-align: bottom;
 }
 
+#vortmaro-reader-word-definition .source-dict-lookup {
+    text-decoration: none;
+    color: #555;
+}
+#vortmaro-reader-word-definition .source-dict-lookup:visited {
+    color: #555;
+}
+#vortmaro-reader-word-definition .source-dict-lookup small {
+    margin-left: -4px;
+}
+
 #vortmaro-reader-word-definition .popover-close {
     cursor: pointer;
     float: right;

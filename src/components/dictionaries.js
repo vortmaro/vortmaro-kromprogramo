@@ -83,6 +83,7 @@ function addLookupLinks(wrapperNode, lookupResult, wordDetails) {
                 }
                 url += encodeURIComponent(key) + '=' + encodeURIComponent(val);
             }
+            link.setAttribute('class', 'source-dict-lookup');
             link.setAttribute('href', url);
             link.setAttribute('target', targetName(dict.name));
             // TODO: find a way to load from within addon rather than fetching from server
@@ -92,6 +93,13 @@ function addLookupLinks(wrapperNode, lookupResult, wordDetails) {
             img.setAttribute('alt', dict.name);
             img.setAttribute('title', dict.name);
             link.appendChild(img);
+
+            if (dict.lang === '$lang') {
+                let small = document.createElement('small');
+                small.appendChild(document.createTextNode(lang));
+                link.appendChild(small);
+            }
+
             lookupP.appendChild(document.createTextNode(' '));
             lookupP.appendChild(link);
         });
