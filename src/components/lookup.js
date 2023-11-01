@@ -810,6 +810,9 @@ const addAltText = function() {
         if (parent.nodeName.toLowerCase() == 'a' && parent.parentNode.nodeName.toLocaleLowerCase() == 'figure') {
             continue;
         }
+        if (img.classList.contains("dict-icon")) {
+            continue;
+        }
         let altText = img.getAttribute('alt');
         let altTextLcase = '';
         if (altText) {

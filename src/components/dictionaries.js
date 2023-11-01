@@ -85,11 +85,12 @@ function addLookupLinks(wrapperNode, lookupResult, wordDetails) {
             }
             link.setAttribute('href', url);
             link.setAttribute('target', targetName(dict.name));
-            link.setAttribute('title', dict.name);
             // TODO: find a way to load from within addon rather than fetching from server
             let img = document.createElement('img');
             img.setAttribute('src', urlBase + dict.icon);
             img.setAttribute('class', 'dict-icon');
+            img.setAttribute('alt', dict.name);
+            img.setAttribute('title', dict.name);
             link.appendChild(img);
             lookupP.appendChild(document.createTextNode(' '));
             lookupP.appendChild(link);
