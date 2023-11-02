@@ -565,19 +565,30 @@ const showDefinition = function(
             definitionDiv.append(p);
         }
 
-        if (defns.length > 0) {
+        let ancestorIds = [];
+        if (parentWord && parentWord.Id) {
+            ancestorIds.push(parentWord.Id)
+        }
+        if (grandparentWord && grandparentWord.Id) {
+            ancestorIds.push(grandparentWord.Id)
+        }
+        if (dict == 'wkpd' && defns.length == 1) {
+            let p = document.createElement('p');
+            let defn = defns[0];
+            p.innerText = defn.DefnText;
+            const defnParam = {
+                id: defn.Id,
+                wordId: word.Id,
+                ancestorIds: ancestorIds
+            };
+            prepAndAddFlashcardBox(p, defnParam, wordDetails);
+            definitionDiv.appendChild(p);
+        } else if (defns.length > 0) {
             let ol = document.createElement('ol');
             definitionDiv.appendChild(ol);
             defns.forEach(function(defn) {
                 let li = document.createElement('li');
                 li.innerText = defn.DefnText;
-                let ancestorIds = [];
-                if (parentWord && parentWord.Id) {
-                    ancestorIds.push(parentWord.Id)
-                }
-                if (grandparentWord && grandparentWord.Id) {
-                    ancestorIds.push(grandparentWord.Id)
-                }
                 const defnParam = {
                     id: defn.Id,
                     wordId: word.Id,
