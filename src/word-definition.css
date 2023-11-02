@@ -48,8 +48,9 @@
     padding: 0;
 }
 
-#vortmaro-reader-word-definition img {
+#vortmaro-reader-word-definition > img {
     max-height: 150px;
+    margin-top: 0.3em;
 }
 
 #vortmaro-reader-word-definition img.dict-icon {
