@@ -468,6 +468,7 @@ const showDefinition = function(
         // Word
         let p = document.createElement('p');
         let strong = document.createElement('strong');
+        strong.setAttribute('lang', langTo2cc(word.Lang));
         strong.innerText = word.DisplayAs || word.Word;
         if (word.ParentWord && word.ParentWord.Word) {
             parentWord = word.ParentWord;
