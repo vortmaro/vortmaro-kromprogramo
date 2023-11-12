@@ -530,7 +530,7 @@ const showDefinition = function(
             p.innerText += ' (' + usageTip + ')';
         }
 
-        if (p.innerText != 'tbd') {
+        if (!['tbd', 'dis'].includes(p.innerText)) {
             definitionDiv.appendChild(p);
         }
 
