@@ -582,7 +582,9 @@ const showDefinition = function(
                 wordId: word.Id,
                 ancestorIds: ancestorIds
             };
-            prepAndAddFlashcardBox(p, defnParam, wordDetails);
+            if (word.Role != 'dis') {
+                prepAndAddFlashcardBox(p, defnParam, wordDetails);
+            }
             definitionDiv.appendChild(p);
         } else if (defns.length > 0) {
             let ol = document.createElement('ol');
