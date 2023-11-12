@@ -715,11 +715,26 @@ function partialLookup() {
         start += offset;
         offset = -offset;
     }
+
+    let selectedWord = nodeText.substring(selection.anchorOffset, selection.focusOffset);
+    let matches = selectedWord.match(/^\s+/)
+    if (matches && matches.length == 1 && matches[0].length > 0) {
+        let wsLen = matches[0].length;
+        selectedWord = selectedWord.substring(wsLen);
+        start += wsLen;
+    }
+    matches = selectedWord.match(/\s+$/)
+    if (matches && matches.length == 1 && matches[0].length > 0) {
+        let wsLen = matches[0].length;
+        selectedWord = selectedWord.substring(0, selectedWord.length - wsLen);
+        offset -= wsLen;
+    }
+
     const result = {
         sentence: extractSentence(nodeText, selection.anchorOffset),
         start: start,
         offset: offset,
-        word: nodeText.substring(selection.anchorOffset, selection.focusOffset),
+        word: selectedWord,
         lang: determineLanguage(selection.anchorNode),
     };
 
