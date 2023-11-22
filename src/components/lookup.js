@@ -51,7 +51,9 @@ const fetchDefinition = function(result, displayFunc) {
     let word = result.word;
     let url = wordLookupUrl + '?word=' + encodeURIComponent(word)
         + '&source=' + encodeURIComponent(source)
-        + '&lang=' + encodeURIComponent(result.lang.toLowerCase());
+        + '&lang=' + encodeURIComponent(result.lang.toLowerCase())
+        // TODO: support multiple defn langs
+        + '&defn=eng';
     if (result.followWord) {
         url += '&follow=' + encodeURIComponent(result.followWord);
     }
