@@ -119,10 +119,12 @@ const getNodeWordAtOffset = function(node, offset, isFinal) {
         word = word.substring(0, word.length - 1);
     }
 
+    let offsetFromStart = offset - start;
+    let {startInSentence, sentence} = extractSentence(elementText, start)
     let result = {
-        sentence: extractSentence(elementText, start),
-        start: start,
-        offset: offset - start,
+        sentence: sentence,
+        start: startInSentence,
+        offset: offsetFromStart,
         word: word,
         lang: determineLanguage(node)
     };
@@ -267,9 +269,11 @@ const prepAndSendFlashcardRequest = function(form) {
 const extractSentence = function(text, start) {
     let sentence = text;
     let sentenceStartPos = 0;
+    let startInSentence = start;
     for (let i = 0; i < start; ++i) {
         if (sentence[i] == '.' || sentence[i] == '。') {
             sentenceStartPos = i + 1;
+            startInSentence = start - sentenceStartPos;
         }
     }
     let sentenceEndPos = sentence.length;
@@ -278,9 +282,14 @@ const extractSentence = function(text, start) {
             sentenceEndPos = i + 1;
         }
     }
-    sentence = sentence.substring(sentenceStartPos, sentenceEndPos).trim();
-    sentence = sentence.replace(/\s+/, ' ');
-    return sentence;
+    sentence = sentence.substring(sentenceStartPos, sentenceEndPos).trimEnd();
+    let trimmed = sentence.trimStart();
+    if (trimmed.length < sentence.length) {
+        let startTrim = sentence.length - trimmed.length;
+        startInSentence -= startTrim;
+        sentence = trimmed;
+    }
+    return {startInSentence, sentence};
 }
 
 // Set up a flashcard submission form for a word definition
@@ -732,9 +741,10 @@ function partialLookup() {
         offset -= wsLen;
     }
 
+    let {startInSentence, sentence} = extractSentence(nodeText, selection.anchorOffset);
     const result = {
-        sentence: extractSentence(nodeText, selection.anchorOffset),
-        start: start,
+        sentence: sentence,
+        start: startInSentence,
         offset: offset,
         word: selectedWord,
         lang: determineLanguage(selection.anchorNode),
