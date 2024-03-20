@@ -57,6 +57,9 @@ const fetchDefinition = function(result, displayFunc) {
     if (result.followWord) {
         url += '&follow=' + encodeURIComponent(result.followWord);
     }
+    if (result.asPartOf) {
+        url += '&asPartOf=' + encodeURIComponent(result.asPartOf);
+    }
     fetchResult = jsonFetch(url, displayFunc, result);
     return fetchResult;
 };
@@ -290,6 +293,30 @@ const extractSentence = function(text, start) {
         sentence = trimmed;
     }
     return {startInSentence, sentence};
+}
+
+const getWholeWord = function(text, selectionStart, selectionLength) {
+    let wordStart = selectionStart;
+    let wordEnd = wordStart + selectionLength;
+    for (let pos = wordStart - 1; pos >= 0; --pos) {
+        let char = text[pos];
+        if (isWordChar(char)) {
+            wordStart = pos;
+        } else {
+            break;
+        }
+    }
+
+    const textLen = text.length;
+    for (let pos = wordEnd + 1; pos < textLen; ++pos) {
+        let char = text[pos];
+        if (isWordChar(char)) {
+            wordEnd = pos;
+        } else {
+            break;
+        }
+    }
+    return text.substring(wordStart, wordEnd + 1);
 }
 
 // Set up a flashcard submission form for a word definition
@@ -742,11 +769,14 @@ function partialLookup() {
     }
 
     let {startInSentence, sentence} = extractSentence(nodeText, selection.anchorOffset);
+    let wholeWord = getWholeWord(sentence, startInSentence, offset)
+
     const result = {
         sentence: sentence,
         start: startInSentence,
         offset: offset,
         word: selectedWord,
+        asPartOf: wholeWord,
         lang: determineLanguage(selection.anchorNode),
     };
 
