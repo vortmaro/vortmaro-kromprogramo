@@ -226,7 +226,7 @@ const sendFlashcardRequest = function(form, authToken) {
         definitionId: Number(form.elements['definitionId'].value),
         url: getCurrentUrl(),
         sentence: form.elements['sentence'].value,
-        start: Number(form.elements['start'].value),
+        start: form.elements['start'].value,
         xpath: ""
     });
 
@@ -349,10 +349,19 @@ const addFlashcardBox = function(wrapperNode, defnDetails, lookupDetails, authTo
     form.appendChild(sentenceField);
 
     // position in sentence
+    let startPos = lookupDetails.start;
+    if (lookupDetails.followWord) {
+        const followWordPattern = new RegExp('\\s' + lookupDetails.followWord + '\\b');
+        const followWordPos = lookupDetails.sentence.substring(startPos).search(followWordPattern);
+        if (followWordPos != -1) {
+            startPos += ',' + (1 + followWordPos + startPos);
+        }
+    }
+
     const startField = document.createElement('input');
     startField.setAttribute('type', 'hidden');
     startField.setAttribute('name', 'start');
-    startField.setAttribute('value', lookupDetails.start);
+    startField.setAttribute('value', startPos);
     form.appendChild(startField);
 
     const submitP = document.createElement('p');
