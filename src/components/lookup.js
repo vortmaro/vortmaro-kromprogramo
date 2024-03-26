@@ -250,6 +250,9 @@ const sendFlashcardRequest = function(form, authToken) {
     })
     .then((data) => {
         console.log(data);
+        if (data.error) {
+            window.alert("Failed to add flashcard");
+        }
     });
 }
 
