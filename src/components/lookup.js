@@ -391,7 +391,19 @@ const showDefinition = function(
     // Definition fetched from Vortmaro
     wordDefinition,
 
-    // Details of word chosen on page for lookup; 'result' elsewhere
+    /**
+     * Details of word chosen on page for lookup; 'result' elsewhere
+     *
+     * {
+     *     sentence,
+     *     start,
+     *     offset,
+     *     word,
+     *     lang
+     * }
+     *
+     * @see getNodeWordAtOffset
+     */
     wordDetails
 ) {
     let defnWord = null;
