@@ -789,7 +789,7 @@ function partialLookup() {
         offset -= wsLen;
     }
 
-    let {startInSentence, sentence} = extractSentence(nodeText, selection.anchorOffset);
+    let {startInSentence, sentence} = extractSentence(nodeText, start);
     let wholeWord = getWholeWord(sentence, startInSentence, offset)
 
     const result = {
