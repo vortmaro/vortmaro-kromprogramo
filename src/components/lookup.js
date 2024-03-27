@@ -486,8 +486,17 @@ const showDefinition = function(
         words.push(wordWithParent);
     }
 
-    let dict, dictName, copyrightText = '';
+    let dict, dictName, copyrightText = '', wordsSoFar = '', lastWord = '', currentWord = '';
+    let flashcardWordDetails = wordDetails;
+    const wholeWordStart = Number(String(flashcardWordDetails.start).replace(/,.*/, ''));
     words.forEach(function(word) {
+        let isNewWord = false;
+        currentWord = word.Word.replace(/^-+/, '').replace(/-+$/, '');
+        if (currentWord.toLowerCase() != lastWord.toLowerCase()) {
+            isNewWord = true;
+            lastWord = currentWord;
+        }
+
         if (word.Dict != dict) {
             dict = word.Dict;
 
@@ -659,9 +668,22 @@ const showDefinition = function(
                     wordId: word.Id,
                     ancestorIds: ancestorIds
                 };
-                prepAndAddFlashcardBox(li, defnParam, wordDetails);
+
+                // add combined length of previous words to start position
+                // e.g. if word is 2nd, 3rd or later component of a compound word
+                if (isNewWord && wordsSoFar.length > 0) {
+                    flashcardWordDetails = Object.assign({}, flashcardWordDetails, {
+                        start: wholeWordStart + wordsSoFar.length
+                    });
+                }
+
+                prepAndAddFlashcardBox(li, defnParam, flashcardWordDetails);
                 ol.appendChild(li);
             });
+        }
+
+        if (isNewWord) {
+            wordsSoFar += currentWord;
         }
     });
     addLookupLinks(definitionDiv, wordDefinition, wordDetails);
