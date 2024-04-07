@@ -229,6 +229,7 @@ const sendFlashcardRequest = function(form, authToken) {
         start: form.elements['start'].value,
         xpath: ""
     });
+    const wrapperNode = form.parentNode;
 
     const headers = new Headers();
     headers.append(
@@ -252,6 +253,13 @@ const sendFlashcardRequest = function(form, authToken) {
         console.log(data);
         if (data.error) {
             window.alert("Failed to add flashcard");
+        } else if (data.AddedToday) {
+            let numWords = data.AddedToday;
+            let msg = numWords + ' word' + (numWords == 1 ? '' : 's') + ' added today';
+            let p = document.createElement('p');
+            p.setAttribute('class', 'flashcard-added-msg');
+            p.appendChild(document.createTextNode(msg));
+            wrapperNode.appendChild(p);
         }
     });
 }
@@ -324,7 +332,7 @@ const getWholeWord = function(text, selectionStart, selectionLength) {
 
 // Set up a flashcard submission form for a word definition
 const addFlashcardBox = function(wrapperNode, defnDetails, lookupDetails, authToken) {
-    const form = document.createElement('form');
+    let form = document.createElement('form');
     form.setAttribute('class', 'vortmaro-create-flashcards');
 
     const wordIdField = document.createElement('input');
@@ -366,6 +374,7 @@ const addFlashcardBox = function(wrapperNode, defnDetails, lookupDetails, authTo
     startField.setAttribute('name', 'start');
     startField.setAttribute('value', startPos);
     form.appendChild(startField);
+    form = wrapperNode.appendChild(form);
 
     const submitP = document.createElement('p');
     const submitButton = document.createElement('button');
@@ -378,7 +387,6 @@ const addFlashcardBox = function(wrapperNode, defnDetails, lookupDetails, authTo
         prepAndSendFlashcardRequest(form);
     };
     form.appendChild(submitButton);
-    wrapperNode.appendChild(form);
 };
 
 const prepAndAddFlashcardBox = function(wrapperNode, defnDetails, lookupDetails) {
