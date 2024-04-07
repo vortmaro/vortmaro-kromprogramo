@@ -653,6 +653,7 @@ const showDefinition = function(
             ancestorIds.push(grandparentWord.Id)
         }
         if (dict == 'wkpd' && defns.length == 1) {
+            let singleDefn = document.createElement('div');
             let p = document.createElement('p');
             let defn = defns[0];
             p.innerText = defn.DefnText;
@@ -661,16 +662,19 @@ const showDefinition = function(
                 wordId: word.Id,
                 ancestorIds: ancestorIds
             };
+            singleDefn.appendChild(p);
+            singleDefn = definitionDiv.appendChild(singleDefn);
             if (word.Role != 'dis') {
-                prepAndAddFlashcardBox(p, defnParam, wordDetails);
+                prepAndAddFlashcardBox(singleDefn, defnParam, wordDetails);
             }
-            definitionDiv.appendChild(p);
         } else if (defns.length > 0) {
             let ol = document.createElement('ol');
             definitionDiv.appendChild(ol);
             defns.forEach(function(defn) {
                 let li = document.createElement('li');
-                li.innerText = defn.DefnText;
+                let p = document.createElement('p');
+                p.innerText = defn.DefnText;
+                li.appendChild(p);
                 const defnParam = {
                     id: defn.Id,
                     wordId: word.Id,
