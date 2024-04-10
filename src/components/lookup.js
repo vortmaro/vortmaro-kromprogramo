@@ -83,12 +83,50 @@ const isWordChar = function(char) {
     return true;
 };
 
-const getNodeWordAtOffset = function(node, offset, isFinal) {
-    let elementText = node.innerText || node.data;
+/**
+ * @return string
+ */
+const getPrecedingText = function(node) {
+    let result = '';
+    while (node.previousSibling) {
+        node = node.previousSibling;
+        let text = node.innerText || node.data;
+        result = text + result;
+        if (text.indexOf('.') != -1 || text.indexOf('。') != -1) {
+            break;
+        }
+    }
 
+    return result;
+}
+
+/**
+ * @return string
+ */
+const getFollowingText = function(node) {
+    let result = '';
+    while (node.nextSibling) {
+        node = node.nextSibling;
+        let text = node.innerText || node.data;
+        result += text;
+        if (text.indexOf('.') != -1 || text.indexOf('。') != -1) {
+            break;
+        }
+    }
+
+    return result;
+}
+
+const getNodeWordAtOffset = function(node, offset, isFinal) {
+    let elementText = node.innerText || node.data || (typeof node === 'string' ? node : '');
     if (elementText.length == 0 || !isWordChar(elementText[offset])) {
         return;
     }
+
+    const precedingText = getPrecedingText(node);
+    const followingText = getFollowingText(node);
+    elementText = precedingText + elementText + followingText;
+    offset += precedingText.length;
 
     let prevSpace = -1;
     let nextSpace = elementText.length;
@@ -153,7 +191,7 @@ const getNodeWordAtOffset = function(node, offset, isFinal) {
     if (endPhrasePos == -1) {
         return result;
     }
-    let followWord = getNodeWordAtOffset(node, endPhrasePos - 1, true);
+    let followWord = getNodeWordAtOffset(elementText, endPhrasePos - 1, true);
     if (followWord && followWord.word != result.word) {
         result.followWord = followWord.word;
     }
