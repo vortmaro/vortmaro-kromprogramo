@@ -734,6 +734,9 @@ const showDefinition = function(
 
         if (isNewWord) {
             wordsSoFar += currentWord;
+            if (wordDetails.word.substring(0, wordsSoFar.length + 1) == wordsSoFar + '-') {
+                wordsSoFar += '-';
+            }
         }
     });
     addLookupLinks(definitionDiv, wordDefinition, wordDetails);
