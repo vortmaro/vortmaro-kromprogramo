@@ -867,8 +867,11 @@ function partialLookup() {
         offset -= wsLen;
     }
 
-    let {startInSentence, sentence} = extractSentence(nodeText, start);
-    let wholeWord = getWholeWord(sentence, startInSentence, offset)
+    // Ensure whole sentence is extracted (e.g. including hyperlinked portions)
+    const resultFromSurrounds = getNodeWordAtOffset(selection.anchorNode, start, true);
+    const startInSentence = resultFromSurrounds.start + resultFromSurrounds.offset;
+    const sentence = resultFromSurrounds.sentence;
+    const wholeWord = getWholeWord(sentence, startInSentence, offset);
 
     const result = {
         sentence: sentence,
