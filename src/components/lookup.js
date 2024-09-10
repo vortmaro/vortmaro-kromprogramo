@@ -130,7 +130,6 @@ const getNodeWordAtOffset = function(node, offset, isFinal) {
 
     let prevSpace = -1;
     let nextSpace = elementText.length;
-    let seenPrev = [];
     for (let i = offset - 1; i >= 0; --i) {
         let char = elementText[i];
 
