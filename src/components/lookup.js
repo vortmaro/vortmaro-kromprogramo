@@ -864,11 +864,11 @@ function getFirstTextDescendant(node) {
  *
  * @example
  * The asterisks mark where the Selection begins and ends
- * "The **night** is still young" -> ["The night is still young", 4, 5, 'anchor']
- * "The night is **still** young" -> ["The night is still young", 13, 5, 'anchor']
+ * "The **night** is still young" -> ["The night is still young", 4, 5, anchorNode]
+ * "The night is **still** young" -> ["The night is still young", 13, 5, anchorNode]
  *
  * @param {Selection} selection
- * @returns {array} [text: string, startOffset: int, length: int, foundIn: 'anchor'|'focus']
+ * @returns {array} [text: string, startOffset: int, length: int, foundIn: Node]
  */
 function extractSelectionText(selection) {
     const {anchorNode, focusNode} = selection;
@@ -883,7 +883,7 @@ function extractSelectionText(selection) {
             length = -length;
             start = end;
         }
-        return [anchorText, start, length, 'anchor'];
+        return [anchorText, start, length, anchorNode];
     }
 
     const focusText = focusNode.innerText || focusNode.data;
@@ -898,27 +898,25 @@ function extractSelectionText(selection) {
         focusSiblingText = focusSibling.innerText || focusSibling.data;
     }
 
+    let focusStart, focusLength, anchorStart, anchorLength;
     if (anchorSiblingText == focusText) {
-        let source = 'anchor';
-        let start = selection.anchorOffset;
-        let length = anchorNode.length - start;
-        if (length < selection.focusOffset) {
-            source = 'focus';
-        }
-        length += selection.focusOffset;
-        return [anchorText + focusText, start, length, source];
+        anchorStart = selection.anchorOffset;
+        anchorLength = anchorText.length - selection.anchorOffset;
+        focusStart = 0;
+        focusLength = selection.focusOffset;
     } else if (focusSiblingText == anchorText) {
         // selection is in reverse, so anchor and focus are swapped
-        let source = 'focus';
-        let start = selection.focusOffset;
-        let length = focusNode.length - start;
-        if (length < selection.anchorOffset) {
-            source = 'anchor';
-        }
-        length += selection.anchorOffset;
-        return [focusText + anchorText, start, length, source];
+        focusStart = selection.focusOffset;
+        focusLength = focusText.length - selection.focusOffset;
+        anchorStart = 0;
+        anchorLength = selection.anchorOffset;
     } else {
         return [false, 0, 0, 'anchor'];
+    }
+    if (focusLength > anchorLength) {
+        return [focusText, focusStart, focusLength, focusNode];
+    } else {
+        return [anchorText, anchorStart, anchorLength, anchorNode];
     }
 }
 
@@ -927,7 +925,7 @@ function partialLookup() {
         return;
     }
     const selection = window.getSelection();
-    let [nodeText, start, offset, foundIn] = extractSelectionText(selection);
+    let [nodeText, start, offset, sourceNode] = extractSelectionText(selection);
     if (!nodeText) {
         return;
     }
@@ -947,7 +945,6 @@ function partialLookup() {
     }
 
     // Ensure whole sentence is extracted (e.g. including hyperlinked portions)
-    const sourceNode = foundIn == 'focus' ? selection.focusNode : selection.anchorNode;
     const resultFromSurrounds = getNodeWordAtOffset(sourceNode, start, true);
     const startInSentence = resultFromSurrounds.start + resultFromSurrounds.offset;
     const sentence = resultFromSurrounds.sentence;
