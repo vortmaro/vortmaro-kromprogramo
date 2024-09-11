@@ -26,6 +26,17 @@ const cardAddUrl = urlBase + '/api/card/add';
 let definitionDiv = null;
 let loadingP = null;
 
+const showCloseButton = function() {
+    if (definitionDiv.getElementsByClassName('popover-close').length > 0) {
+        return;
+    }
+    const closeDiv = document.createElement('div');
+    closeDiv.setAttribute('class', 'popover-close');
+    closeDiv.appendChild(document.createTextNode('X'));
+    closeDiv.addEventListener('mouseup', hideDefinition);
+    definitionDiv.appendChild(closeDiv);
+}
+
 const jsonFetch = function(url, handlerFunc, ...additionalArgs) {
     fetch(url).then(function(response) {
         if (!response.ok || response.status != 200) {
@@ -466,11 +477,7 @@ const showDefinition = function(
 
     loadingP.style.display = 'none';
 
-    const closeDiv = document.createElement('div');
-    closeDiv.setAttribute('class', 'popover-close');
-    closeDiv.appendChild(document.createTextNode('X'));
-    closeDiv.addEventListener('mouseup', hideDefinition);
-    definitionDiv.appendChild(closeDiv);
+    showCloseButton();
 
     if (!wordDefinition.Words) {
         const errNode = document.createElement('p');
