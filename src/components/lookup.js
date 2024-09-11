@@ -49,6 +49,26 @@ const jsonFetch = function(url, handlerFunc, ...additionalArgs) {
         return response.json();
     }).then(function (json) {
         handlerFunc(json, ...additionalArgs);
+    }).catch((err) => {
+        if (definitionDiv) {
+            showCloseButton();
+
+            // TODO: translate
+            const errorEls = document.getElementsByClassName('vortmaro-reader-error');
+            console.log(errorEls);
+            if (errorEls.length > 0) {
+                errorEls.item(0).innerText = 'Server error';
+            } else {
+                const errorP = document.createElement('p');
+                errorP.classList.add('vortmaro-reader-error');
+                errorP.innerText = 'Server error';
+                definitionDiv.appendChild(errorP);
+            }
+            const loading = document.getElementById('vortmaro-reader-loading');
+            if (loading) {
+                loading.style.display = 'none';
+            }
+        }
     });
 };
 
