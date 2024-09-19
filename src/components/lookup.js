@@ -121,7 +121,13 @@ const getPrecedingText = function(node) {
     let result = '';
     while (node.previousSibling) {
         node = node.previousSibling;
-        let text = node.innerText || node.data;
+        let text = node.innerText;
+        if (text === undefined) {
+            text = node.data;
+        }
+        if (text === undefined) {
+            continue;
+        }
         result = text + result;
         if (text.indexOf('.') != -1 || text.indexOf('。') != -1) {
             break;
@@ -138,7 +144,13 @@ const getFollowingText = function(node) {
     let result = '';
     while (node.nextSibling) {
         node = node.nextSibling;
-        let text = node.innerText || node.data;
+        let text = node.innerText;
+        if (text === undefined) {
+            text = node.data;
+        }
+        if (text === undefined) {
+            continue;
+        }
         result += text;
         if (text.indexOf('.') != -1 || text.indexOf('。') != -1) {
             break;
