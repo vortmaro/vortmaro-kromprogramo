@@ -215,7 +215,7 @@ const getNodeWordAtOffset = function(node, offset, isFinal) {
     if (isFinal) {
         return result;
     }
-    if (!result.lang.match(/^deu?($|[_-])/)) {
+    if (!result.lang || !result.lang.match(/^deu?($|[_-])/)) {
         return result;
     }
 
