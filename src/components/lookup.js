@@ -578,6 +578,7 @@ const showDefinition = function(
     let dict, dictName, copyrightText = '', wordsSoFar = '', lastWord = '', currentWord = '';
     let flashcardWordDetails = wordDetails;
     const wholeWordStart = Number(String(flashcardWordDetails.start).replace(/,.*/, ''));
+    clearAudioCount();
     words.forEach(function(word) {
         let isNewWord = false;
         currentWord = word.Word.replace(/^-+/, '').replace(/-+$/, '');

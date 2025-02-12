@@ -1,8 +1,18 @@
+let firstAudioAdded = false;
+
+function clearAudioCount()
+{
+    firstAudioAdded = false;
+}
+
 function addAudio(definitionDiv, word, includedAudio)
 {
+    /** Whether the audio belongs to the word itself - not only to its parent */
+    let hasOwnAudio = false;
     let wordAudioUrls = [];
     if (word.Audio != null) {
         for (let i = 0; i < word.Audio.length; ++i) {
+            hasOwnAudio = true;
             let url = word.Audio[i].Url;
             if (!includedAudio.includes(url)) {
                 wordAudioUrls.push(url);
@@ -29,6 +39,10 @@ function addAudio(definitionDiv, word, includedAudio)
         let src = wordAudioUrls[i];
         let audioNode = document.createElement('audio');
         audioNode.setAttribute('controls', 'y');
+        if (i == 0 && hasOwnAudio && !firstAudioAdded) {
+            audioNode.setAttribute('autoplay', '');
+            firstAudioAdded = true;
+        }
 
         // Chromium-based browsers have CSP restrictions on adding <audio> from external sources
         // So fetch the audio and add it as a blob URL instead (seems really stupid but what can ya do?)
