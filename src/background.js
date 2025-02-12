@@ -26,10 +26,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     }
 });
 
-// When a new tab is created, mark it as disabled
-// TODO: enable if current/parent tab is enabled
+// When a new tab is created, enable if current/parent tab is enabled
 browser.tabs.onCreated.addListener((tab) => {
-    tabsEnabled[tab.id] = false;
+    tabsEnabled[tab.id] = lastTabEnabled;
 });
 
 // When switching tabs, update icon & enable/disable lookups relevant to tab
