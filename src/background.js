@@ -37,10 +37,8 @@ browser.tabs.onActivated.addListener((info) => {
     updateTab(info.tabId);
 });
 
-// Disable after reloading tab
 // TODO: retain enabled status
 browser.tabs.onUpdated.addListener((tabId) => {
-    tabsEnabled[tabId] = false;
     updateTab(tabId);
 });
 
