@@ -37,9 +37,11 @@ browser.tabs.onActivated.addListener((info) => {
     updateTab(info.tabId);
 });
 
-// TODO: retain enabled status
-browser.tabs.onUpdated.addListener((tabId) => {
-    updateTab(tabId);
+// Retain enabled status after reloading page
+browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
+    if (changeInfo.status === 'complete' && tabsEnabled[tabId]) {
+        updateTab(tabId);
+    }
 });
 
 // Toggle enabled/disabled on the current tab when icon clicked
@@ -50,7 +52,6 @@ chrome.browserAction.onClicked.addListener((tab) => {
 
 // Set the icon and enable/disable lookups in tab based on whether tab is enabled
 function updateTab(tabId) {
-    let command = "";
     if (tabsEnabled[tabId]) {
         chrome.browserAction.setIcon({
             path: {
@@ -58,7 +59,6 @@ function updateTab(tabId) {
                 "32": "img/logo-32.png"
             }
         });
-        command = "setEnabled(true);";
         lastTabEnabled = true;
     } else {
         chrome.browserAction.setIcon({
@@ -67,10 +67,7 @@ function updateTab(tabId) {
                 "32": "img/logo-disabled-32.png"
             }
         });
-        command = "setEnabled(false);";
         lastTabEnabled = false;
     }
-    chrome.tabs.executeScript(tabId, {
-        code: command
-    });
+    browser.tabs.sendMessage(tabId, { enableTab: lastTabEnabled })
 }

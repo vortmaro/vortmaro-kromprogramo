@@ -1,6 +1,11 @@
 // Whether lookups are enabled
-// TODO: when reloading page or opening in new tab, look at tab value
 let enabled = false;
+
+browser.runtime.onMessage.addListener((request) => {
+    if (Object.hasOwn(request, 'enableTab')) {
+        setEnabled(request.enableTab)
+    }
+});
 
 function setEnabled(toEnable) {
     enabled = !!toEnable;
