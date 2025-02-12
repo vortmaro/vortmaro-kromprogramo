@@ -50,7 +50,6 @@ chrome.browserAction.onClicked.addListener((tab) => {
 
 // Set the icon and enable/disable lookups in tab based on whether tab is enabled
 function updateTab(tabId) {
-    const enabledInfoString = JSON.stringify(tabsEnabled);
     let command = "";
     if (tabsEnabled[tabId]) {
         chrome.browserAction.setIcon({
