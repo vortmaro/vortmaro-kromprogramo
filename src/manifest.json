@@ -11,6 +11,7 @@
     ],
     "background": {
         "scripts": [
+            "shared.js",
             "background.js"
         ]
     },
@@ -19,6 +20,7 @@
             "exclude_matches": ["*://developer.mozilla.org/*"],
             "matches": ["*://*/*"],
             "js": [
+                "shared.js",
                 "components/langs.js",
                 "components/lookup.js",
                 "components/declensionCruncher.js",

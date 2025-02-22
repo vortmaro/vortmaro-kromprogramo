@@ -23,7 +23,6 @@ const showDelay = 0;
 // Actually look up the words; false for testing just extracting words
 const doLookups = true;
 const body = document.getElementsByTagName('body').item(0);
-const urlBase = 'https://vortmaro.org';
 const wordLookupUrl = urlBase + '/api/word/fetch';
 const wordReportUrl = urlBase + '/api/word/report';
 const cardAddUrl = urlBase + '/api/card/add';
