@@ -1,5 +1,6 @@
 let tabsEnabled = {};
 let lastTabEnabled = false;
+let languages = {};
 
 function onCreated() {
     if (chrome.runtime.lastError) {
@@ -68,5 +69,16 @@ function updateTab(tabId) {
         });
         lastTabEnabled = false;
     }
-    browser.tabs.sendMessage(tabId, { enableTab: lastTabEnabled })
+    browser.tabs.sendMessage(tabId, { enableTab: lastTabEnabled, languages })
 }
+
+// TODO: support other languages - maybe in 2050 ;)
+fetch(urlBase + '/api/lang/supported?lang=eng').then((response) => {
+    if (!response.ok || response.status != 200) {
+        return {};
+    }
+    return response.json();
+})
+.then((data) => {
+    languages = data;
+});

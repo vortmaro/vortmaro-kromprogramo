@@ -1,9 +1,13 @@
 // Whether lookups are enabled
 let enabled = false;
+let lookupLangs = {};
 
 browser.runtime.onMessage.addListener((request) => {
     if (Object.hasOwn(request, 'enableTab')) {
         setEnabled(request.enableTab)
+    }
+    if (Object.hasOwn(request, 'languages') && Object.keys(request.languages).length > 0) {
+        lookupLangs = request.languages;
     }
 });
 
@@ -515,6 +519,48 @@ const showDefinition = function(
 
     showCloseButton();
 
+    // Show language block
+    const langInfo = document.createElement('p');
+    langInfo.setAttribute('class', 'lang-info')
+
+    if (Object.keys(lookupLangs).length > 0) {
+        langInfo.appendChild(document.createTextNode('Text language: '));
+        const langSelect = document.createElement('select');
+        const opt = document.createElement('option');
+        opt.appendChild(document.createTextNode(""));
+        langSelect.appendChild(opt);
+
+        const textLang = wordDefinition.Words?.[0]?.Lang;
+        for (const langKey in lookupLangs) {
+            const opt = document.createElement('option');
+            opt.setAttribute('value', langKey);
+            if (langKey === textLang) {
+                opt.setAttribute('selected', '');
+            }
+            let lang = lookupLangs[langKey];
+            let langName = lang.Endo;
+            if (lang.Exo) {
+                langName += ' (' + lang.Exo + ')';
+            }
+            opt.appendChild(document.createTextNode(langName));
+            langSelect.appendChild(opt);
+        }
+        langSelect.onchange = (ev) => {
+            const docLang = ev.target.value;
+            if (docLang) {
+                document.documentElement.setAttribute('data-vortmaro-lang', docLang);
+
+                // re-request definition(s) in selected language
+                wordDetails.lang = docLang;
+                showWord(wordDetails.node, wordDetails, wordDetails.ev);
+            }
+        };
+        langInfo.appendChild(langSelect);
+        definitionDiv.appendChild(langInfo);
+    } else {
+        langInfo.appendChild(document.createTextNode('Text language: ' + wordDetails.lang));
+    }
+
     if (!wordDefinition.Words) {
         const errNode = document.createElement('p');
         let errText = '- not found -';
@@ -803,6 +849,11 @@ let lastWord = {
     start: null
 };
 const determineLanguage = function(node)  {
+    const overrideLang = document.documentElement.getAttribute('data-vortmaro-lang');
+    if (overrideLang) {
+        return overrideLang;
+    }
+
     if (node.hasAttribute && node.hasAttribute('lang')) {
         return node.getAttribute('lang').toLowerCase();
     }
@@ -837,45 +888,45 @@ const showWord = function(node, result, ev) {
         hideDefinition();
         return;
     }
-    if (lastWord.node !== node || lastWord.start !== result.start) {
-        // console.log('Current word:', result.word);
-        lastWord.node = node;
-        lastWord.start = result.start;
 
-        if (!result.lang) {
-            // TODO: smarter detection method, and/or allow user to specify
-            window.alert('Unable to determine text language, sorry');
-            return;
-        }
+    lastWord.node = node;
+    lastWord.start = result.start;
+    result.node = node;
+    result.ev = ev;
 
-        if (!doLookups) {
-            return;
-        }
-
-        if (!definitionDiv) {
-            const newDiv = document.createElement('div');
-            newDiv.setAttribute('id', 'vortmaro-reader-word-definition');
-            newDiv.style.display = 'none';
-            // console.log('Create DIV for ' + wordDefinition.Words[0].Word);
-            definitionDiv = body.appendChild(newDiv);
-            loadingP = document.createElement('p');
-            loadingP.setAttribute('id', 'vortmaro-reader-loading');
-            loadingP.appendChild(document.createTextNode('...'));
-            loadingP = definitionDiv.appendChild(loadingP)
-        } else {
-            while (definitionDiv.childNodes.length > 1 ) {
-                definitionDiv.removeChild(definitionDiv.lastChild);
-            }
-        }
-
-        const newY = (ev.pageY + 20);
-        const newX = Math.max(ev.pageX - 50, 10);
-        definitionDiv.style.top = newY + 'px';
-        definitionDiv.style.left = newX + 'px';
-        loadingP.style.display = 'block';
-        definitionDiv.style.display = 'block';
-        fetchDefinition(result, showDefinition);
+    if (!result.lang) {
+        // TODO: smarter detection method, and/or allow user to specify
+        window.alert('Unable to determine text language, sorry');
+        return;
     }
+
+    if (!doLookups) {
+        return;
+    }
+
+    if (!definitionDiv) {
+        const newDiv = document.createElement('div');
+        newDiv.setAttribute('id', 'vortmaro-reader-word-definition');
+        newDiv.style.display = 'none';
+        // console.log('Create DIV for ' + wordDefinition.Words[0].Word);
+        definitionDiv = body.appendChild(newDiv);
+        loadingP = document.createElement('p');
+        loadingP.setAttribute('id', 'vortmaro-reader-loading');
+        loadingP.appendChild(document.createTextNode('...'));
+        loadingP = definitionDiv.appendChild(loadingP)
+    } else {
+        while (definitionDiv.childNodes.length > 1 ) {
+            definitionDiv.removeChild(definitionDiv.lastChild);
+        }
+    }
+
+    const newY = (ev.pageY + 20);
+    const newX = Math.max(ev.pageX - 50, 10);
+    definitionDiv.style.top = newY + 'px';
+    definitionDiv.style.left = newX + 'px';
+    loadingP.style.display = 'block';
+    definitionDiv.style.display = 'block';
+    fetchDefinition(result, showDefinition);
 };
 
 /**
