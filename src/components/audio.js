@@ -5,7 +5,7 @@ function clearAudioCount()
     firstAudioAdded = false;
 }
 
-function addAudio(definitionDiv, word, includedAudio)
+function addAudio(definitionDiv, word, includedAudio, autoplayWordAudio)
 {
     /** Whether the audio belongs to the word itself - not only to its parent */
     let hasOwnAudio = false;
@@ -39,7 +39,7 @@ function addAudio(definitionDiv, word, includedAudio)
         let src = wordAudioUrls[i];
         let audioNode = document.createElement('audio');
         audioNode.setAttribute('controls', 'y');
-        if (i == 0 && hasOwnAudio && !firstAudioAdded) {
+        if (i == 0 && hasOwnAudio && !firstAudioAdded && autoplayWordAudio) {
             audioNode.setAttribute('autoplay', '');
             firstAudioAdded = true;
         }

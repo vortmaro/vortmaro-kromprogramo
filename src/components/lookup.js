@@ -620,6 +620,10 @@ const showDefinition = function(
         words.push(wordWithParent);
     }
 
+    // Counter for enumerating over words
+    // multiple definitions with the same word (e.g. verb, noun) only count as 1 word
+    let wordNum = 0;
+    let charCount = 0;
     let dict, dictName, copyrightText = '', wordsSoFar = '', lastWord = '', currentWord = '';
     let flashcardWordDetails = wordDetails;
     const wholeWordStart = Number(String(flashcardWordDetails.start).replace(/,.*/, ''));
@@ -628,8 +632,12 @@ const showDefinition = function(
         let isNewWord = false;
         currentWord = word.Word.replace(/^-+/, '').replace(/-+$/, '');
         if (currentWord.toLowerCase() != lastWord.toLowerCase()) {
+            if (wordNum > 0) {
+                charCount += lastWord.length
+            }
             isNewWord = true;
             lastWord = currentWord;
+            ++wordNum;
         }
 
         if (word.Dict != dict) {
@@ -702,7 +710,11 @@ const showDefinition = function(
 
         definitionDiv.appendChild(p);
 
-        addAudio(definitionDiv, word, includedAudio);
+        let autoplayWordAudio = false;
+        if (offset >= charCount && offset < charCount + word.Word.length) {
+            autoplayWordAudio = true;
+        }
+        addAudio(definitionDiv, word, includedAudio, autoplayWordAudio);
 
         let attrs = [];
         if (parentWord && parentWord.Attributes) {
