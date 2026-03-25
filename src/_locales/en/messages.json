@@ -1,6 +1,0 @@
-{
-    "menuItemLookup": {
-        "message": "Look up '%s' via Vortmaro",
-        "description": "Context menu item that looks up the current selection."
-    }
-}
